@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Xml;
 using System.Xml.Linq;
@@ -26,7 +27,7 @@ namespace BonPrixWebService.Controllers
         }
 
         // POST: api/DispatchNotification2
-        public string Post([FromBody]string value)
+        public Task<HttpResponseMessage> Post([FromBody]string value)
         {
             System.Web.HttpContext.Current.Request.SaveAs("C:\\program files\\iis express\\xml\\text.xml", false);
             //    var task = Task.Factory.StartNew(() =>
@@ -48,7 +49,9 @@ namespace BonPrixWebService.Controllers
             document.Validate(schemaSet, (s, e) => msgs.Add(e.Message));
             if (msgs.Count == 0)
             {
-                return bodyText;
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = new StringContent(bodyText);
+                return Task.FromResult(response);
             }
             else
             {
@@ -58,8 +61,9 @@ namespace BonPrixWebService.Controllers
                 {
                     rsp = rsp + "\n" + m;
                 }
-
-                return rsp;
+                var response = new HttpResponseMessage(HttpStatusCode.BadRequest  );
+                response.Content = new StringContent("XML Error \n\n" +  rsp + "\n\n" +  bodyText);
+                return Task.FromResult(response);
 
             }
         }
