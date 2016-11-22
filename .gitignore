@@ -243,3 +243,6 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/BonPrixWebService/xml/failure
+/BonPrixWebService/xml/success
+/BonPrixWebService/xsd
