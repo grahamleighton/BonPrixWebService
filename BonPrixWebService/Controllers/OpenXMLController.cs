@@ -41,6 +41,7 @@ namespace BonPrixWebService.Controllers
             HttpStatusCode statusCodeBAD = HttpStatusCode.BadRequest;
             HttpStatusCode statusCodeOK = HttpStatusCode.OK;
 
+/*
             try
             {
                    
@@ -66,6 +67,8 @@ namespace BonPrixWebService.Controllers
 
             }
 
+
+ */
 
             try
             {
