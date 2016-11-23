@@ -16,15 +16,23 @@ namespace BonPrixWebService.Controllers
     public class OpenXMLController : ApiController
     {
         // GET: api/DispatchNotification2
-        public IEnumerable<string> Get()
+        public Task<HttpResponseMessage>  Get()
         {
-            return new string[] { "value1", "value2" };
+
+            HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+            resp.Content = new StringContent("GET Not supported");
+
+            return Task.FromResult(resp);
+
         }
 
         // GET: api/DispatchNotification2/5
-        public string Get(int id)
+        public Task<HttpResponseMessage> Get(int id)
         {
-            return "value";
+            HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+            resp.Content = new StringContent("GET/{id} Not supported");
+
+            return Task.FromResult(resp);
         }
 
         // POST: api/DispatchNotification2
@@ -34,6 +42,17 @@ namespace BonPrixWebService.Controllers
 //        public Task<HttpResponseMessage> Post([FromBody]string value)
         public Task<HttpResponseMessage> Post()
         {
+
+            /*
+             * Note : the max size of content that can be posted is governed in the web.config file
+             * see entry for <httpRuntime targetFramework="4.5" maxRequestLength ="24576" />
+             * maxrequestlength is in kb.
+             *
+             * Note : IIS manager might also have a setting for the maxAllowedContentLength so check that too
+             * though in this caseit worked anyway
+             */
+
+
             String xmlName = "";
             String localFile = "";
             HttpResponseMessage theResponse;
@@ -247,7 +266,7 @@ namespace BonPrixWebService.Controllers
                         {
                             String resp = "";
                             /*
-                             * Write each message out to the server ,typically if ot faiols there is one the first one produced anyway 
+                             * Write each message out to the server ,typically if it fails there is one the first one produced anyway 
                              */
 
                             foreach (var m in msgs)
@@ -365,13 +384,23 @@ namespace BonPrixWebService.Controllers
         }
 
         // PUT: api/DispatchNotification2/5
-        public void Put(int id, [FromBody]string value)
+        public Task<HttpResponseMessage>  Put(int id, [FromBody]string value)
         {
+            HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+            resp.Content = new StringContent("PUT Not supported");
+
+            return Task.FromResult(resp);
+
         }
 
         // DELETE: api/DispatchNotification2/5
-        public void Delete(int id)
+        public Task<HttpResponseMessage>  Delete(int id)
         {
+            HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
+            resp.Content = new StringContent("DELETE Not supported");
+
+            return Task.FromResult(resp);
+
         }
     }
 }
