@@ -59,36 +59,11 @@ namespace BonPrixWebService.Controllers
 
             HttpStatusCode statusCodeBAD = HttpStatusCode.BadRequest;
             HttpStatusCode statusCodeOK = HttpStatusCode.OK;
+            var infomsgs = new List<string>();
+            var errs = new List<string>();
+            XDocument rsp;
 
-/*
-            try
-            {
-                   
-                MemoryStream ms = new MemoryStream(System.Web.HttpContext.Current.Request.ContentLength);
-                HttpContext.Current.Request.InputStream.CopyTo(ms);
-
-
-                localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + "_non_xml.xml";
-                FileStream file = new FileStream(localFile, FileMode.Create);
-                ms.WriteTo(file);
-                file.Close();
-                ms.Close();
-                ms.Dispose();
-                file.Dispose();
-                  
-            }
-            catch(Exception e)
-            {
-                theResponse = new HttpResponseMessage(statusCodeBAD);
-                theResponse.Content = new StringContent(xmlName + "\nXML Error\n\n" + e.Message + "\n\nOriginating : " + System.Web.HttpContext.Current.Request.UserHostAddress + "\n\n" + e.StackTrace );
-
-                return Task.FromResult(theResponse);
-
-            }
-
-
- */
-
+            statusCodeBAD = statusCodeOK;
             try
             {
 
@@ -106,8 +81,15 @@ namespace BonPrixWebService.Controllers
                         bodyText = reader.ReadToEnd(); 
                         if (bodyText.Length == 0)
                         {
+                            infomsgs.Clear();
+                            errs.Clear();
+                            errs.Add("Empty File Sent");
+
+                            rsp = createResponse("",xmlName , false, infomsgs, errs);
+
                             theResponse = new HttpResponseMessage(statusCodeBAD);
-                            theResponse.Content = new StringContent(xmlName + "\nXML Error 1\n\nEmpty file\n\nOriginating : " + System.Web.HttpContext.Current.Request.UserHostAddress);
+
+                            theResponse.Content = new StringContent(rsp.ToString());
 
                             return Task.FromResult(theResponse);
 
@@ -118,7 +100,15 @@ namespace BonPrixWebService.Controllers
                 catch(Exception e)
                 {
                     theResponse = new HttpResponseMessage(statusCodeBAD);
-                    theResponse.Content = new StringContent(xmlName + "\nXML Error 2\n\n" + e.Message + "\n\nLength : " + System.Web.HttpContext.Current.Request.ContentLength     + "\nOriginating : " + System.Web.HttpContext.Current.Request.UserHostAddress);
+                    errs.Clear();
+                    infomsgs.Clear();
+
+                    errs.Add(e.Message);
+
+                    rsp = createResponse("", xmlName, false, infomsgs, errs);
+
+                    theResponse.Content = new StringContent(rsp.ToString());
+
                     try
                     {
                         localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + "_non_xml.xml";
@@ -134,55 +124,22 @@ namespace BonPrixWebService.Controllers
                 }
 
 
-                /*
-                                if ( ! bodyText.Contains("<xml") && !bodyText.Contains("<?xml"))
-                                {
-                                    localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + "_non_xml.xml";
-                                    System.Web.HttpContext.Current.Request.SaveAs(localFile, false);
-
-                                    theResponse = new HttpResponseMessage(statusCodeBAD);
-                                    theResponse.Content = new StringContent(xmlName + "\nXML Error\n\nNot an XML file\n\nOriginating : " + System.Web.HttpContext.Current.Request.UserHostAddress);
-
-                                    return Task.FromResult(theResponse);
-
-                                }
-                */
-
-                int i = 0;
-                int j = 0;
-                // try to parse the very last end tag. This should look like </endpoint> or </ns1:endpoint>
-                
-                i = bodyText.LastIndexOf("<");
-                j = bodyText.LastIndexOf(">");
-
-                if (i > 0 && j > 0 && j > i + 2)
-                {
-                    xmlName = bodyText.Substring(i + 2, j - i - 2);
-                    // strip away the special characters
-                    xmlName = xmlName.Replace("</", "");
-                    xmlName = xmlName.Replace(">", "");
-
-                    xmlName = xmlName.Replace(">", "");
-                    // strip away any namespace adapters
-                    i = xmlName.IndexOf(":");
-                    if (i > 0)
-                    {
-                        xmlName = xmlName.Substring(i + 1, xmlName.Length - (i + 1));
-                    }
-                    // xmlName should now contain just the actual request e.g. "endpoint"
-                }
-
                 // OK we have some XML , lets loose validate it by parsing it , this will 
                 // trap any tag type errors
                 XDocument theDocument;
+
+                string thisAdjustmentIndicator = "";
                 try
                 {
                     theDocument = XDocument.Parse(bodyText);
-              
 
+
+                    foreach ( XElement element in theDocument.Descendants("AdjustmentIndicator") )
+                    {
+                        thisAdjustmentIndicator  = element.Value;
+                    }
+                    
                     xmlName = theDocument.Root.Name.LocalName;
-
-                     
                 }
                 catch (Exception e)
                 {
@@ -193,15 +150,28 @@ namespace BonPrixWebService.Controllers
                     using (var reader = new StreamReader(HttpContext.Current.Request.InputStream))
                     {
                         reader.BaseStream.Seek(0, SeekOrigin.Begin);
-                        System.IO.File.WriteAllText(localFile, reader.ReadToEnd());
-                        //                        System.Web.HttpContext.Current.Request.SaveAs(localFile, false);
+                        System.IO.File.WriteAllText(localFile, bodyText );
                     }
 
                     theResponse = new HttpResponseMessage(statusCodeBAD);
-                    theResponse.Content = new StringContent(xmlName + "\nXML Error 3\n\n" + e.Message + "\n\nOriginating : " + System.Web.HttpContext.Current.Request.UserHostAddress);
+
+                    errs.Clear();
+                    infomsgs.Clear();
+
+                    errs.Add(e.Message);
+                    infomsgs.Add("General Parse Error");
+
+                    rsp = createResponse("None", xmlName ,false, infomsgs, errs);
+                 
+                    theResponse.Content = new StringContent(rsp.ToString());
 
                     return Task.FromResult(theResponse);
 
+                }
+
+                if ( String.IsNullOrEmpty(thisAdjustmentIndicator) )
+                {
+                    thisAdjustmentIndicator = "C";
                 }
 
                 if (xmlName.Length > 0)
@@ -211,7 +181,18 @@ namespace BonPrixWebService.Controllers
                     *  look for an XSD with this xmlName in the filename to validate against 
                     * 
                     */
-                    String schemaXSDFile = System.Web.HttpContext.Current.Server.MapPath("/xsd/" + xmlName + ".xsd");
+                    String schemaXSDFile = "";
+                    if ( thisAdjustmentIndicator == "D" )
+                        schemaXSDFile = System.Web.HttpContext.Current.Server.MapPath("/xsd/" + xmlName + "_Delete.xsd");
+                    else
+                        schemaXSDFile = System.Web.HttpContext.Current.Server.MapPath("/xsd/" + xmlName + "_Add.xsd");
+
+                    if (! File.Exists(schemaXSDFile))
+                    {
+                        // Default to the none appended version 
+                        schemaXSDFile = System.Web.HttpContext.Current.Server.MapPath("/xsd/" + xmlName + ".xsd");
+                    }
+
                     if (File.Exists(schemaXSDFile))
                     {
                         XmlSchemaSet schemaSet = new XmlSchemaSet();
@@ -221,12 +202,9 @@ namespace BonPrixWebService.Controllers
                         settings.ValidationType = ValidationType.Schema;
                         settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;
 
-
-                        var msgs = new List<string>();
-
                         try
                         {
-                            theDocument.Validate(schemaSet, (s2, e) => msgs.Add(e.Message));
+                            theDocument.Validate(schemaSet, (s2, e) => errs.Add(e.Message));
                         }
                         catch (Exception e)
                         {
@@ -236,12 +214,18 @@ namespace BonPrixWebService.Controllers
                             using (var reader = new StreamReader(HttpContext.Current.Request.InputStream))
                             {
                                 reader.BaseStream.Seek(0, SeekOrigin.Begin);
-                                System.IO.File.WriteAllText(localFile, reader.ReadToEnd());
-                                //                        System.Web.HttpContext.Current.Request.SaveAs(localFile, false);
+                                System.IO.File.WriteAllText(localFile, bodyText);
                             }
 
                             theResponse = new HttpResponseMessage(statusCodeBAD);
-                            theResponse.Content = new StringContent(xmlName + "\nXML Error 4\n\n" + e.Message + "\n\n");
+
+                            errs.Clear();
+                            infomsgs.Clear();
+
+                            errs.Add(e.Message);
+                            rsp = createResponse(Path.GetFileNameWithoutExtension(schemaXSDFile), xmlName , false, infomsgs, errs);
+
+                            theResponse.Content = new StringContent(rsp.ToString());
 
                             return Task.FromResult(theResponse);
 
@@ -250,7 +234,7 @@ namespace BonPrixWebService.Controllers
                          * If it failed (msgs.Count > 0 ) then write out the mesages back to the browser / client and return BadRequest
                          * If it worked return OK response
                          */
-                        if (msgs.Count == 0)
+                        if (errs.Count == 0)
                         {
 
                             // Save the file in the Success folder on the server
@@ -258,21 +242,17 @@ namespace BonPrixWebService.Controllers
                             localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/success/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
                             System.IO.File.WriteAllText(localFile, bodyText);
                             theResponse = new HttpResponseMessage(statusCodeOK);
-                            theResponse.Content = new StringContent(xmlName + "\n\n\nParsed OK");
+
+                            infomsgs.Clear();
+
+                            rsp = createResponse(Path.GetFileNameWithoutExtension(schemaXSDFile), xmlName , true, infomsgs, errs);
+
+                            theResponse.Content = new StringContent(rsp.ToString()); 
 
                             return Task.FromResult(theResponse);
                         }
                         else
                         {
-                            String resp = "";
-                            /*
-                             * Write each message out to the server ,typically if it fails there is one the first one produced anyway 
-                             */
-
-                            foreach (var m in msgs)
-                            {
-                                resp = resp + "\n" + m;
-                            }
 
                             // Save the file in the Failure folder on the server
 
@@ -280,12 +260,14 @@ namespace BonPrixWebService.Controllers
                             using (var reader = new StreamReader(HttpContext.Current.Request.InputStream))
                             {
                                 reader.BaseStream.Seek(0, SeekOrigin.Begin);
-                                System.IO.File.WriteAllText(localFile, reader.ReadToEnd());
-                                //                        System.Web.HttpContext.Current.Request.SaveAs(localFile, false);
+                                System.IO.File.WriteAllText(localFile, bodyText );
                             }
 
+                            infomsgs.Clear();
+                            rsp = createResponse(Path.GetFileNameWithoutExtension(schemaXSDFile), xmlName, false, infomsgs, errs);
                             theResponse = new HttpResponseMessage(statusCodeBAD);
-                            theResponse.Content = new StringContent(xmlName + "\nXML Error 5\n\n" + resp + "\n\n");
+                            theResponse.Content = new StringContent(rsp.ToString() );
+
 
                             return Task.FromResult(theResponse);
                         }
@@ -309,19 +291,22 @@ namespace BonPrixWebService.Controllers
                     settings.ValidationType = ValidationType.Schema;
                     settings.ValidationFlags |= XmlSchemaValidationFlags.ReportValidationWarnings;
 
-                    var msgs = new List<string>();
                     try
                     {
-                        theDocument.Validate(schemaSet, (s2, e) => msgs.Add(e.Message));
+                        errs.Clear();
+                        theDocument.Validate(schemaSet, (s2, e) => errs.Add(e.Message));
 
-                        if (msgs.Count == 0)
+                        if (errs.Count == 0)
                         {
                             /*
                              * No errors found , so return the OK response and some arbitrary text to say it worked 
                              * save the XML in the success folder
                              */
                             theResponse = new HttpResponseMessage(statusCodeOK);
-                            theResponse.Content = new StringContent(xmlName + "\n\n\nParsed OK against generic xsd");
+                            infomsgs.Clear();
+                            rsp = createResponse("Generic", xmlName , true, infomsgs, errs);
+
+                            theResponse.Content = new StringContent(rsp.ToString());
 
                             localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/success/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
 
@@ -342,24 +327,19 @@ namespace BonPrixWebService.Controllers
                     }
                     catch (Exception E)
                     {
-                        String resp = "";
-
-                        foreach (var m in msgs)
-                        {
-                            resp = resp + "\n" + m;
-                        }
-
                         localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
                         System.Web.HttpContext.Current.Request.SaveAs(localFile, false);
                         theResponse = new HttpResponseMessage(statusCodeBAD);
-                        theResponse.Content = new StringContent(xmlName + "\nXML Error against generic XSD\n\n" + resp + "\n\n");
+
+                        infomsgs.Clear();
+
+                        rsp = createResponse("Generic", xmlName , false, infomsgs, errs);
+
+                        theResponse.Content = new StringContent(rsp.ToString());
 
                         return Task.FromResult(theResponse);
 
                     }
-
-
-
                 }
 
             }
@@ -375,11 +355,62 @@ namespace BonPrixWebService.Controllers
             localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/success/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
             System.Web.HttpContext.Current.Request.SaveAs(localFile, false);
             theResponse = new HttpResponseMessage(statusCodeOK);
-            theResponse.Content = new StringContent(xmlName + "\nXML Not Parsed\n");
+
+            infomsgs.Clear();
+            errs.Clear();
+
+            infomsgs.Add("No XSD Match to Validate XML");
+
+            rsp = createResponse("NONE", xmlName , true,  infomsgs, errs);
+
+            theResponse.Content = new StringContent(rsp.ToString() );
 
             return Task.FromResult(theResponse);
 
 
+
+        }
+
+        private XDocument createResponse(string XSDName , string XMLName,  bool XMLValid , List<String> infomsgs , List<String> errmsgs)
+        {
+
+            XDocument theDoc = new XDocument();
+            XElement root = new XElement("ROOT");
+
+            root.Add(new XElement("XSD", XSDName ));
+            root.Add(new XElement("XMLTYPE", XMLName));
+            root.Add(new XElement("LENGTH", System.Web.HttpContext.Current.Request.ContentLength));
+            root.Add(new XElement("ORIGIN", System.Web.HttpContext.Current.Request.UserHostAddress));
+            theDoc.Add(root);
+            if ( XMLValid )
+                root.Add(new XElement("RESULT", "OK"));
+            else
+                root.Add(new XElement("RESULT", "FAIL"));
+
+            if (infomsgs.Count > 0)
+            {
+                XElement info_root = new XElement("INFORMATION");
+
+                foreach (var m in infomsgs)
+                {
+                    info_root.Add(new XElement ("INFO", m.ToString()) );
+                }
+                root.Add(info_root);
+            }
+
+            if (errmsgs.Count > 0)
+            {
+                XElement err_root = new XElement("ERRORS");
+
+                foreach (var m in errmsgs)
+                {
+                    err_root.Add(new XElement( "ERROR", m.ToString()) );
+                }
+                root.Add(err_root);
+            }
+
+
+            return theDoc;
 
         }
 
