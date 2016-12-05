@@ -18,21 +18,13 @@ namespace BonPrixWebService.Controllers
         // GET: api/DispatchNotification2
         public Task<HttpResponseMessage>  Get()
         {
-
-            HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-            resp.Content = new StringContent("GET Not supported");
-
-            return Task.FromResult(resp);
-
+            return Post();
         }
 
         // GET: api/DispatchNotification2/5
         public Task<HttpResponseMessage> Get(int id)
         {
-            HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-            resp.Content = new StringContent("GET/{id} Not supported");
-
-            return Task.FromResult(resp);
+            return Post();
         }
 
         // POST: api/DispatchNotification2
@@ -381,6 +373,8 @@ namespace BonPrixWebService.Controllers
             root.Add(new XElement("XMLTYPE", XMLName));
             root.Add(new XElement("LENGTH", System.Web.HttpContext.Current.Request.ContentLength));
             root.Add(new XElement("ORIGIN", System.Web.HttpContext.Current.Request.UserHostAddress));
+            root.Add(new XElement("TIME", DateTime.Now.ToUniversalTime()  ));
+
             theDoc.Add(root);
             if ( XMLValid )
                 root.Add(new XElement("RESULT", "OK"));
@@ -415,23 +409,16 @@ namespace BonPrixWebService.Controllers
         }
 
         // PUT: api/DispatchNotification2/5
-        public Task<HttpResponseMessage>  Put(int id, [FromBody]string value)
+        public Task<HttpResponseMessage> Put(int id, [FromBody]string value)
         {
-            HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-            resp.Content = new StringContent("PUT Not supported");
-
-            return Task.FromResult(resp);
+            return Post();
 
         }
 
         // DELETE: api/DispatchNotification2/5
         public Task<HttpResponseMessage>  Delete(int id)
         {
-            HttpResponseMessage resp = new HttpResponseMessage(HttpStatusCode.OK);
-            resp.Content = new StringContent("DELETE Not supported");
-
-            return Task.FromResult(resp);
-
+            return Post();
         }
     }
 }
