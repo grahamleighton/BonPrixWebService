@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewBag.Title = "OpenXML Tester";
+}
+
+
+<div class="body-content">
+    <h2>OpenXML Test</h2>
+
+    <p align="center">  Enter some XML in the box below to use the OpenXMl Post method and see the response.</p>
+</div>
+
+<form method="post" name="TestForm" action="/api/OpenXML" enctype="text/plain">
+    <p align="center">
+        @Html.TextArea("thisXML", new { rows = "30", cols = "120" })
+    </p>
+    <p align="center">
+        <button type="submit">Process</button>
+    </p>
+</form>
+
+<h2>Sample</h2>
+
+<pre>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+    &lt;ns1:ShippingNotification xmlns:ns1="urn:bonprix.de:pi:PA:FGH:Global:ShippingNotification:10"&gt;
+        &lt;Header&gt;
+            &lt;Deliverynumber&gt;0080050676&lt;/Deliverynumber&gt;
+            &lt;DeliveryDate&gt;2016-11-03&lt;/DeliveryDate&gt;
+            &lt;ShippingPoint&gt;100A&lt;/ShippingPoint&gt;
+            &lt;GoodsRecipient&gt;0000001108&lt;/GoodsRecipient&gt;
+            &lt;AdjustmentIndicator&gt;C&lt;/AdjustmentIndicator&gt;
+         &lt;/Header&gt;
+         &lt;Items&gt;
+            &lt;PositionNumber&gt;000010&lt;/PositionNumber&gt;
+            &lt;ArticleNumber&gt;601026&lt;/ArticleNumber&gt;
+            &lt;CustomerOrderNumber /&gt;
+            &lt;Package&gt;
+                &lt;PackageNumber&gt;999900403&lt;/PackageNumber&gt;
+                &lt;Quantity&gt;2.0&lt;/Quantity&gt;
+                &lt;UnitOfMeasure&gt;ST&lt;/UnitOfMeasure&gt;
+            &lt;/Package&gt;
+         &lt;/Items&gt;
+         &lt;Items&gt;
+            &lt;PositionNumber&gt;000020&lt;/PositionNumber&gt;
+            &lt;ArticleNumber&gt;601032&lt;/ArticleNumber&gt;
+            &lt;CustomerOrderNumber /&gt;
+            &lt;Package&gt;
+                &lt;PackageNumber&gt;999900403&lt;/PackageNumber&gt;
+                &lt;Quantity&gt;1.0&lt;/Quantity&gt;
+                &lt;UnitOfMeasure&gt;ST&lt;/UnitOfMeasure&gt;
+            &lt;/Package&gt;
+            &lt;Package&gt;
+                &lt;PackageNumber&gt;999900404&lt;/PackageNumber&gt;
+                &lt;Quantity&gt;2.0&lt;/Quantity&gt;
+                &lt;UnitOfMeasure&gt;ST&lt;/UnitOfMeasure&gt;
+            &lt;/Package&gt;
+         &lt;/Items&gt;
+    &lt;/ns1:ShippingNotification&gt;</pre>
+

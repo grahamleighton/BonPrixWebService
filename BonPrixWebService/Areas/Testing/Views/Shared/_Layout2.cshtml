@@ -2,8 +2,8 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Bon Prix Test Form</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
@@ -16,24 +16,28 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Bon Prix Web API", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Bon Prix Test", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
                     <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
                     <li>@Html.ActionLink("Test", "Index", "Testing/Testing", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Files", "FileView", "Testing/Testing", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("XSDs", "XSDView", "Testing/Testing", new { area = "" }, null)</li>
+
                 </ul>
             </div>
         </div>
     </div>
-    <div class="container body-content">
+
+   
         @RenderBody()
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - FGH Application</p>
         </footer>
-    </div>
+   
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

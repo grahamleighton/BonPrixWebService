@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "XSDView";
+}
+
+<h2>XSD View</h2>
+
+
+<table border="0">
+
+    @foreach (var fname in (List<String>)ViewBag.vb_fls)
+    {
+        <tr>
+            <td><a href="@fname">@fname</a></td>
+        </tr>
+    }
+
+</table>
+
+

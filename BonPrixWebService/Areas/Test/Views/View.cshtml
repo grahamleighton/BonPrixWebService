@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = "View";
+}
+
+<h2>View</h2>
+
+Enter some XML in the box below to use the OpenXMl Post method and see the response.
+
+<form method="post" name="TestForm" action="~/Controllers/OpenXML">
+
+    <textarea>
+        <pre>
+        <?xml version="1.0" encoding="UTF-8" ?>
+<ns1:ShippingNotification xmlns:ns1="urn:bonprix.de:pi:PA:FGH:Global:ShippingNotification:10">
+        <Header>
+        <Deliverynumber>0080050676</Deliverynumber>
+        <DeliveryDate>2016-11-03</DeliveryDate>
+        <ShippingPoint>100A</ShippingPoint>
+        <GoodsRecipient>0000001108</GoodsRecipient>
+  </Header>
+        <Items>
+        <PositionNumber>000010</PositionNumber>
+        <ArticleNumber>601026</ArticleNumber>
+        <CustomerOrderNumber />
+        <Package>
+        <PackageNumber>999900403</PackageNumber>
+        <Quantity>2.0</Quantity>
+        <UnitOfMeasure>ST</UnitOfMeasure>
+    </Package>
+  </Items>
+        <Items>
+        <PositionNumber>000020</PositionNumber>
+        <ArticleNumber>601032</ArticleNumber>
+        <CustomerOrderNumber />
+        <Package>
+        <PackageNumber>999900403</PackageNumber>
+        <Quantity>1.0</Quantity>
+        <UnitOfMeasure>ST</UnitOfMeasure>
+    </Package>
+        <Package>
+        <PackageNumber>999900404</PackageNumber>
+        <Quantity>2.0</Quantity>
+        <UnitOfMeasure>ST</UnitOfMeasure>
+    </Package>
+  </Items>
+</ns1:ShippingNotification>
+        </pre>
+
+    </textarea>
+    <button type="submit"></button>
+
+</form>

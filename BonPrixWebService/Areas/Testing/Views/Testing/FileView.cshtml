@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "FileView";
+}
+
+<h2>FileView</h2>
+
+<h3>Success</h3>
+
+
+<table border="0">
+
+    @foreach (var fname in (List<String>) ViewBag.vb_fls)
+    {
+        <tr>
+            <td><a href="@fname">@fname</a></td>
+        </tr>
+    }
+
+</table>
+
+
+
+<h3>Failures</h3>
+
+<table border="0">
+
+    @foreach (var fname in (List<String>)ViewBag.vb_flf)
+    {
+        <tr>
+            <td><a href="@fname">@fname</a></td>
+        </tr>
+    }
+
+</table>
+
+
+
+
+
+
+
+
