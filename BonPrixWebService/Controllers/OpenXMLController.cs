@@ -358,6 +358,14 @@ namespace BonPrixWebService.Controllers
              */
 
 
+
+
+
+            String pathToFailure = "../xml/failure/";
+            String pathToSuccess = "../xml/success/";
+            String pathToXSD = "../xsd/";
+
+
             String xmlName = "";
             String localFile = "";
             HttpResponseMessage theResponse;
@@ -367,7 +375,14 @@ namespace BonPrixWebService.Controllers
             var infomsgs = new List<string>();
             var errs = new List<string>();
             XDocument rsp;
+            /*
+                        XDocument test = createResponse("TestXSD", "MyXMLName", true, infomsgs, errs);
+                        theResponse = new HttpResponseMessage(statusCodeOK);
+                        theResponse.Content = new StringContent(test.ToString());
 
+
+                        return Task.FromResult(theResponse);
+            */
 
             if (HttpContext.Current.Request.ContentLength > int.MaxValue)
             {
@@ -435,11 +450,22 @@ namespace BonPrixWebService.Controllers
 
                     try
                     {
-                        localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + "_non_xml.xml";
+                        localFile = System.Web.HttpContext.Current.Server.MapPath(pathToFailure) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + "_non_xml.xml";
                         System.Web.HttpContext.Current.Request.SaveAs(localFile, false);
                     }
                     catch (Exception E)
                     {
+                        errs.Clear();
+                        errs.Add(E.Message);
+                        infomsgs.Clear();
+                        infomsgs.Add(localFile);
+                        infomsgs.Add("Position 1");
+                        XDocument esp = createResponse("", "", false, infomsgs, errs);
+                        HttpResponseMessage eresp = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                        eresp.Content = new StringContent(esp.ToString());
+
+                        return Task.FromResult(eresp);
+
 
                     }
 
@@ -469,12 +495,29 @@ namespace BonPrixWebService.Controllers
                 {
                     // Save the file in the Failure folder on the server
 
-                    localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                    localFile = System.Web.HttpContext.Current.Server.MapPath(pathToFailure) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
 
                     using (var reader = new StreamReader(HttpContext.Current.Request.InputStream))
                     {
                         reader.BaseStream.Seek(0, SeekOrigin.Begin);
-                        System.IO.File.WriteAllText(localFile, bodyText );
+                        try
+                        {
+                            System.IO.File.WriteAllText(localFile, bodyText);
+                        }
+                        catch (Exception E)
+                        {
+                            errs.Clear();
+                            errs.Add(E.Message);
+                            infomsgs.Clear();
+                            infomsgs.Add(localFile);
+                            infomsgs.Add("Position 2");
+                            XDocument esp = createResponse("", "", false, infomsgs, errs);
+                            HttpResponseMessage eresp = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                            eresp.Content = new StringContent(esp.ToString());
+
+                            return Task.FromResult(eresp);
+
+                        }
                     }
 
                     theResponse = new HttpResponseMessage(statusCodeBAD);
@@ -507,14 +550,14 @@ namespace BonPrixWebService.Controllers
                     */
                     String schemaXSDFile = "";
                     if ( thisAdjustmentIndicator == "D" )
-                        schemaXSDFile = System.Web.HttpContext.Current.Server.MapPath("/xsd/" + xmlName + "_Delete.xsd");
+                        schemaXSDFile = System.Web.HttpContext.Current.Server.MapPath(pathToXSD + xmlName + "_Delete.xsd");
                     else
-                        schemaXSDFile = System.Web.HttpContext.Current.Server.MapPath("/xsd/" + xmlName + "_Add.xsd");
+                        schemaXSDFile = System.Web.HttpContext.Current.Server.MapPath(pathToXSD + xmlName + "_Add.xsd");
 
                     if (! File.Exists(schemaXSDFile))
                     {
                         // Default to the none appended version 
-                        schemaXSDFile = System.Web.HttpContext.Current.Server.MapPath("/xsd/" + xmlName + ".xsd");
+                        schemaXSDFile = System.Web.HttpContext.Current.Server.MapPath(pathToXSD + xmlName + ".xsd");
                     }
 
                     if (File.Exists(schemaXSDFile))
@@ -534,11 +577,29 @@ namespace BonPrixWebService.Controllers
                         {
                             // Save the file in the Failure folder on the server
 
-                            localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                            localFile = System.Web.HttpContext.Current.Server.MapPath(pathToFailure) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
                             using (var reader = new StreamReader(HttpContext.Current.Request.InputStream))
                             {
                                 reader.BaseStream.Seek(0, SeekOrigin.Begin);
-                                System.IO.File.WriteAllText(localFile, bodyText);
+                                try
+                                {
+                                    System.IO.File.WriteAllText(localFile, bodyText);
+                                }
+                                catch (Exception E)
+                                {
+
+                                    errs.Clear();
+                                    errs.Add(E.Message);
+                                    infomsgs.Clear();
+                                    infomsgs.Add(localFile);
+                                    infomsgs.Add("Position 3");
+                                    XDocument esp = createResponse("", "", false, infomsgs, errs);
+                                    HttpResponseMessage eresp = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                    eresp.Content = new StringContent(esp.ToString());
+
+                                    return Task.FromResult(eresp);
+                                }
+
                             }
 
                             theResponse = new HttpResponseMessage(statusCodeBAD);
@@ -563,8 +624,27 @@ namespace BonPrixWebService.Controllers
 
                             // Save the file in the Success folder on the server
 
-                            localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/success/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
-                            System.IO.File.WriteAllText(localFile, bodyText);
+                            localFile = System.Web.HttpContext.Current.Server.MapPath(pathToSuccess) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+
+                            try
+                            {
+                                System.IO.File.WriteAllText(localFile, bodyText);
+                            }
+                            catch (Exception E)
+                            {
+
+                                errs.Clear();
+                                errs.Add(E.Message);
+                                infomsgs.Clear();
+                                infomsgs.Add(localFile);
+                                infomsgs.Add("Position 4");
+                                XDocument esp = createResponse("", "", false, infomsgs, errs);
+                                HttpResponseMessage eresp = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                eresp.Content = new StringContent(esp.ToString());
+
+                                return Task.FromResult(eresp);
+                            }
+
                             theResponse = new HttpResponseMessage(statusCodeOK);
 
                             infomsgs.Clear();
@@ -580,11 +660,28 @@ namespace BonPrixWebService.Controllers
 
                             // Save the file in the Failure folder on the server
 
-                            localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                            localFile = System.Web.HttpContext.Current.Server.MapPath(pathToFailure) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
                             using (var reader = new StreamReader(HttpContext.Current.Request.InputStream))
                             {
                                 reader.BaseStream.Seek(0, SeekOrigin.Begin);
-                                System.IO.File.WriteAllText(localFile, bodyText );
+                                try
+                                {
+                                    System.IO.File.WriteAllText(localFile, bodyText);
+                                }
+                                catch (Exception E)
+                                {
+                                    errs.Clear();
+                                    errs.Add(E.Message);
+                                    infomsgs.Clear();
+                                    infomsgs.Add(localFile);
+                                    infomsgs.Add("Position 5");
+                                    XDocument esp = createResponse("", "", false, infomsgs, errs);
+                                    HttpResponseMessage eresp = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                    eresp.Content = new StringContent(esp.ToString());
+
+                                    return Task.FromResult(eresp);
+                                }
+
                             }
 
                             infomsgs.Clear();
@@ -605,7 +702,7 @@ namespace BonPrixWebService.Controllers
                  * 
                  */
 
-                String schemaXSDGFile = System.Web.HttpContext.Current.Server.MapPath("/xsd/generic.xsd");
+                String schemaXSDGFile = System.Web.HttpContext.Current.Server.MapPath(pathToXSD + "generic.xsd");
                 if (File.Exists(schemaXSDGFile))
                 {
                     XmlSchemaSet schemaSet = new XmlSchemaSet();
@@ -632,17 +729,35 @@ namespace BonPrixWebService.Controllers
 
                             theResponse.Content = new StringContent(rsp.ToString());
 
-                            localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/success/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                            localFile = System.Web.HttpContext.Current.Server.MapPath(pathToSuccess) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
 
-//                            using (var reader = new StreamReader(HttpContext.Current.Request.InputStream))
-//                            {
-//                                reader.BaseStream.Seek(0, SeekOrigin.Begin);
-//                                var httpdata = reader.ReadToEnd();
-                                 
-                                System.IO.File.WriteAllText(localFile,bodyText);
-//                              System.Web.HttpContext.Current.Request.SaveAs(localFile, false);
-                                //                        System.Web.HttpContext.Current.Request.SaveAs(localFile, false);
-//                            }
+                            //                            using (var reader = new StreamReader(HttpContext.Current.Request.InputStream))
+                            //                            {
+                            //                                reader.BaseStream.Seek(0, SeekOrigin.Begin);
+                            //                                var httpdata = reader.ReadToEnd();
+
+
+                            try
+                            {
+                                System.IO.File.WriteAllText(localFile, bodyText);
+                            }
+                            catch (Exception E)
+                            {
+
+                                errs.Clear();
+                                errs.Add(E.Message);
+                                infomsgs.Clear();
+                                infomsgs.Add(localFile);
+                                infomsgs.Add("Position 6");
+                                XDocument esp = createResponse("", "", false, infomsgs, errs);
+                                HttpResponseMessage eresp = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                                eresp.Content = new StringContent(esp.ToString());
+
+                                return Task.FromResult(eresp);
+                            }
+                            //                              System.Web.HttpContext.Current.Request.SaveAs(localFile, false);
+                            //                        System.Web.HttpContext.Current.Request.SaveAs(localFile, false);
+                            //                            }
 
 
                             return Task.FromResult(theResponse);
@@ -654,8 +769,25 @@ namespace BonPrixWebService.Controllers
                     }
                     catch (Exception E)
                     {
-                        localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
-                        System.Web.HttpContext.Current.Request.SaveAs(localFile, false);
+                        localFile = System.Web.HttpContext.Current.Server.MapPath(pathToFailure) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+
+                        try
+                        {
+                            System.Web.HttpContext.Current.Request.SaveAs(localFile, false);
+                        }
+                        catch (Exception E2)
+                        {
+                            errs.Clear();
+                            errs.Add(E2.Message);
+                            infomsgs.Clear();
+                            infomsgs.Add(localFile);
+                            infomsgs.Add("Position 7");
+                            XDocument esp = createResponse("", "", false, infomsgs, errs);
+                            HttpResponseMessage eresp = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                            eresp.Content = new StringContent(esp.ToString());
+
+                            return Task.FromResult(eresp);
+                        }
                         theResponse = new HttpResponseMessage(statusCodeBAD);
 
                         infomsgs.Clear();
@@ -679,8 +811,26 @@ namespace BonPrixWebService.Controllers
              *  No option but to class it as successful and save to success folder
              * 
              */
-            localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/success/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
-            System.Web.HttpContext.Current.Request.SaveAs(localFile, false);
+            localFile = System.Web.HttpContext.Current.Server.MapPath(pathToSuccess) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+
+            try
+            {
+                System.Web.HttpContext.Current.Request.SaveAs(localFile, false);
+            }
+            catch (Exception E)
+            {
+                errs.Clear();
+                errs.Add(E.Message);
+                infomsgs.Clear();
+                infomsgs.Add(localFile);
+                infomsgs.Add("Position 8");
+                XDocument esp = createResponse("", "", false, infomsgs, errs);
+                HttpResponseMessage eresp = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                eresp.Content = new StringContent(esp.ToString());
+
+                return Task.FromResult(eresp);
+
+            }
             theResponse = new HttpResponseMessage(statusCodeOK);
 
             infomsgs.Clear();

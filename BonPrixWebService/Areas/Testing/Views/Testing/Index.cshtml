@@ -10,7 +10,9 @@
     <p align="center">  Enter some XML in the box below to use the OpenXMl Post method and see the response.</p>
 </div>
 
-<form method="post" name="TestForm" action="/api/OpenXML" enctype="text/plain">
+
+
+<form method="post" name="TestForm" action="../api/OpenXML" enctype="text/plain">
     <p align="center">
         @Html.TextArea("thisXML", new { rows = "30", cols = "120" })
     </p>

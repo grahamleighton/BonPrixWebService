@@ -212,6 +212,7 @@
     <Content Include="Areas\Testing\Views\Testing\View.cshtml" />
     <Content Include="Areas\Testing\Views\Testing\FileView.cshtml" />
     <Content Include="Areas\Testing\Views\Testing\XSDView.cshtml" />
+    <Content Include="ClassDiagram1.cd" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
