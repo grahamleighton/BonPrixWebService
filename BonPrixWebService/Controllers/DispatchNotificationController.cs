@@ -34,6 +34,8 @@ namespace BonPrixWebService.Controllers
         public Task<HttpResponseMessage> Post([FromBody]string value)
         {
             OpenXMLController newapi = new OpenXMLController();
+            newapi.setCaller("dispatch");
+
 
             return newapi.Post();
 

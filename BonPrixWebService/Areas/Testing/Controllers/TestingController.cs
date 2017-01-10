@@ -100,19 +100,19 @@ namespace BonPrixWebService.Areas.Testing.Controllers
             try
 
             {
-                var fils2 = System.IO.Directory.EnumerateFiles(Server.MapPath(xmlRoot + "/success"));
+                var fils2 = System.IO.Directory.EnumerateFiles(Server.MapPath(xmlRoot + "/productdata/success"));
 
             }
             catch (Exception e)
             {
-                ViewBag.smp = "Cannot find files in " + Server.MapPath(xmlRoot + "/success");
+                ViewBag.smp = "Cannot find files in " + Server.MapPath(xmlRoot + "/productdata/success");
                 ViewBag.vb_fls = "";
                 ViewBag.vb_cdts = "";
                 ViewBag.vb_flf =  "";
                 ViewBag.vb_cdtf = "";
                 return View();
             }
-            var fils = System.IO.Directory.EnumerateFiles(Server.MapPath(xmlRoot + "/success"));
+            var fils = System.IO.Directory.EnumerateFiles(Server.MapPath(xmlRoot + "/productdata/success"));
 
 
             List<String> fls = new List<String>();
@@ -121,26 +121,36 @@ namespace BonPrixWebService.Areas.Testing.Controllers
             List<String> cdtf = new List<String>();
 
 
-//            ViewBag.smp = Server.MapPath("/");
+            //            ViewBag.smp = Server.MapPath("/");
+
+
+            List<String> fldrs = new List<String>();
+
+            fldrs.Add("productdata");
+            fldrs.Add("invoice");
+            fldrs.Add("dispatchnotification");
+            fldrs.Add("open");
+
+
 
             foreach ( var f in fils )
             {
                 DateTime cdt = System.IO.File.GetCreationTime(f);
                 string fnm = f.Substring(Server.MapPath("").Length-3);
-                fls.Add(xmlRoot + "/success/" + Path.GetFileName(f)) ;
+                fls.Add(xmlRoot + "/productdata/success/" + Path.GetFileName(f)) ;
                 cdts.Add(cdt.ToString("yyyy-MM-dd hh:mm:ss"));
 
             }
 
             ViewBag.fileFailureList = "";
 
-            fils = System.IO.Directory.EnumerateFiles(Server.MapPath(xmlRoot + "/failure"));
+            fils = System.IO.Directory.EnumerateFiles(Server.MapPath(xmlRoot + "/productdata/failure"));
 
             foreach (var f in fils)
             {
                 DateTime cdt = System.IO.File.GetCreationTime(f);
                 string fnm = f.Substring(Server.MapPath("").Length - 3);
-                flf.Add( xmlRoot + "/failure/" + Path.GetFileName(f));
+                flf.Add( xmlRoot + "/productdata/failure/" + Path.GetFileName(f));
 
                 cdtf.Add(cdt.ToString("yyyy-MM-dd hh:mm:ss"));
             }
