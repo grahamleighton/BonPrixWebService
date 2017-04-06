@@ -547,6 +547,19 @@ namespace BonPrixWebService.Controllers
                 }
                 else
                 {
+
+                    try
+                    {
+                        string localsavepath;
+
+                        localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_all.xml";
+
+                        System.IO.File.WriteAllText(localsavepath, bodyText);
+                    }
+                    catch (Exception gen)
+                    {
+
+                    }
                     if ( bodyText.IndexOf("<") == -1 || ( bodyText.IndexOf("</") == -1  && bodyText.IndexOf("/>") == -1 ) )
                     {
                         infomsgs.Clear();
@@ -588,6 +601,20 @@ namespace BonPrixWebService.Controllers
             List<String> infomsgs = new List<String>();
             String localFile = "";
             String xmlName = "";
+
+            try
+            {
+                string localsavepath;
+
+                localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_all.xml";
+
+                System.IO.File.WriteAllText(localsavepath, bodyText);
+            }
+            catch(Exception gen)
+            {
+                
+            }
+
 
             statusCodeBAD = statusCodeOK;
             try
