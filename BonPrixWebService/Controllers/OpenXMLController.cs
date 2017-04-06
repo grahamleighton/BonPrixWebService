@@ -39,7 +39,7 @@ namespace BonPrixWebService.Controllers
 
             String foldername = "";
             foldername = "../xml/" + tmpCalledBy;
-            foldername = foldername + "/failure/";
+            foldername = foldername + "/";
 
             return foldername;
         }
@@ -52,10 +52,11 @@ namespace BonPrixWebService.Controllers
             {
                 tmpCalledBy = "open";
             }
-            
+
+      //      tmpCalledby = "All";
             String foldername = "";
             foldername = "../xml/" + tmpCalledBy;
-            foldername = foldername + "/success/";
+            foldername = foldername + "/";
 
             return foldername;
         }
@@ -453,11 +454,208 @@ namespace BonPrixWebService.Controllers
                 responseMessage.StatusCode = HttpStatusCode.BadRequest;
             }
 
+            try
+            {
+                string localsavepath;
+
+                localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp1.xml";
+
+                System.IO.File.WriteAllText(localsavepath, xdoc.ToString() );
+            }
+            catch(Exception ex)
+            {
+
+            }
+
             return Task.FromResult(responseMessage);
 
         }
 
 
+        async public Task<HttpResponseMessage> Post2()
+        {
+            HttpResponseMessage theResponse;
+
+            var infomsgs = new List<string>();
+            var errs = new List<string>();
+            XDocument rsp;
+            string xmlName = "";
+            infomsgs.Clear();
+
+            errs.Clear();
+            infomsgs.Add("XML Received");
+
+            rsp = createResponseXMLDoc("", xmlName, true, infomsgs, errs);
+
+            theResponse = new HttpResponseMessage(statusCodeOK);
+
+            theResponse.Content = new StringContent(rsp.ToString());
+
+            currentContext = HttpContext.Current;
+
+            if (currentContext.Request.ContentLength > int.MaxValue)
+            {
+                infomsgs.Clear();
+                errs.Clear();
+                errs.Add("XML is too large to process");
+
+                rsp = createResponseXMLDoc("", xmlName, false, infomsgs, errs);
+
+                theResponse = new HttpResponseMessage(statusCodeBAD);
+
+                theResponse.Content = new StringContent(rsp.ToString());
+
+                try
+                {
+                    string localsavepath;
+
+                    localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+
+                    System.IO.File.WriteAllText(localsavepath, rsp.ToString());
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+                return theResponse;
+
+            }
+
+            if (currentContext.Request.ContentLength == 0)
+            {
+                infomsgs.Clear();
+                errs.Clear();
+                errs.Add("No Content Found");
+
+                rsp = createResponseXMLDoc("", xmlName, false, infomsgs, errs);
+
+                theResponse = new HttpResponseMessage(statusCodeBAD);
+
+                theResponse.Content = new StringContent(rsp.ToString());
+
+                try
+                {
+                    string localsavepath;
+
+                    localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+
+                    System.IO.File.WriteAllText(localsavepath, rsp.ToString());
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+                return theResponse;
+
+            }
+            var bodyText = "";
+            using (var reader = new StreamReader(currentContext.Request.InputStream))
+            {
+                reader.BaseStream.Seek(0, SeekOrigin.Begin);
+                bodyText = reader.ReadToEnd();
+                bodyText = bodyText.Replace("thisXML=", "").Trim();
+                if (bodyText.Length == 0)
+                {
+                    infomsgs.Clear();
+                    errs.Clear();
+                    errs.Add("No Content Found");
+
+                    rsp = createResponseXMLDoc("", xmlName, false, infomsgs, errs);
+
+                    theResponse = new HttpResponseMessage(statusCodeBAD);
+
+                    theResponse.Content = new StringContent(rsp.ToString());
+
+                    try
+                    {
+                        string localsavepath;
+
+                        localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+
+                        System.IO.File.WriteAllText(localsavepath, rsp.ToString());
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+
+                    return theResponse;
+                }
+                else
+                {
+
+                    try
+                    {
+                        string localsavepath;
+
+                        localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_all.xml";
+
+                        System.IO.File.WriteAllText(localsavepath, bodyText);
+                    }
+                    catch (Exception gen)
+                    {
+
+                    }
+                    if (bodyText.IndexOf("<") == -1 || (bodyText.IndexOf("</") == -1 && bodyText.IndexOf("/>") == -1))
+                    {
+                        infomsgs.Clear();
+                        errs.Clear();
+                        errs.Add("Content is not XML");
+
+                        rsp = createResponseXMLDoc("", xmlName, false, infomsgs, errs);
+
+                        theResponse = new HttpResponseMessage(statusCodeBAD);
+
+                        theResponse.Content = new StringContent(rsp.ToString());
+
+                        try
+                        {
+                            string localsavepath;
+
+                            localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+
+                            System.IO.File.WriteAllText(localsavepath, rsp.ToString());
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                        return theResponse;
+
+                    }
+                }
+            }
+
+            // if we are here we have what looks like XML , save it in the success folder
+
+            try
+            {
+                string localsavepath;
+
+                localsavepath = currentContext.Server.MapPath(getPathToSuccess()) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + calledby + ".xml";
+
+                System.IO.File.WriteAllText(localsavepath, bodyText);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            try
+            {
+                string localsavepath;
+
+                localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+
+                System.IO.File.WriteAllText(localsavepath, rsp.ToString());
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return theResponse;
+        }
 
         async public Task<HttpResponseMessage> Post()
         {
@@ -506,6 +704,19 @@ namespace BonPrixWebService.Controllers
 
                 theResponse.Content = new StringContent(rsp.ToString());
 
+                try
+                {
+                    string localsavepath;
+
+                    localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+
+                    System.IO.File.WriteAllText(localsavepath, rsp.ToString());
+                }
+                catch (Exception ex)
+                {
+
+                }
+
                 return theResponse;
 
             }
@@ -521,6 +732,19 @@ namespace BonPrixWebService.Controllers
                 theResponse = new HttpResponseMessage(statusCodeBAD);
 
                 theResponse.Content = new StringContent(rsp.ToString());
+
+                try
+                {
+                    string localsavepath;
+
+                    localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+
+                    System.IO.File.WriteAllText(localsavepath, rsp.ToString());
+                }
+                catch (Exception ex)
+                {
+
+                }
 
                 return theResponse;
 
@@ -542,6 +766,19 @@ namespace BonPrixWebService.Controllers
                     theResponse = new HttpResponseMessage(statusCodeBAD);
 
                     theResponse.Content = new StringContent(rsp.ToString());
+
+                    try
+                    {
+                        string localsavepath;
+
+                        localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+
+                        System.IO.File.WriteAllText(localsavepath, rsp.ToString());
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
 
                     return theResponse;
                 }
@@ -572,6 +809,18 @@ namespace BonPrixWebService.Controllers
 
                         theResponse.Content = new StringContent(rsp.ToString());
 
+                        try
+                        {
+                            string localsavepath;
+
+                            localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+
+                            System.IO.File.WriteAllText(localsavepath, rsp.ToString());
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
                         return theResponse;
 
                     }

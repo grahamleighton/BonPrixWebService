@@ -30,7 +30,7 @@ namespace BonPrixWebService.Controllers
             OpenXMLController newapi = new OpenXMLController();
             newapi.setCaller("invoice");
 
-            return newapi.Post();
+            return newapi.Post2();
 
 
 /*            ResponseModel rm = new ResponseModel();

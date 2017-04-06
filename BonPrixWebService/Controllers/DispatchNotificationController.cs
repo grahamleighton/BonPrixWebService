@@ -37,7 +37,7 @@ namespace BonPrixWebService.Controllers
             newapi.setCaller("dispatch");
 
 
-            return newapi.Post();
+            return newapi.Post2();
 
             
         }
