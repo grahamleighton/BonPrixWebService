@@ -147,7 +147,7 @@ namespace BonPrixWebService.Controllers
 
                     try
                     {
-                        localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + "_non_xml.xml";
+                        localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + xmlName + "_non_xml.xml";
                         System.IO.File.WriteAllText(localFile, fdata);
                         
                     }
@@ -182,7 +182,7 @@ namespace BonPrixWebService.Controllers
                 {
                     // Save the file in the Failure folder on the server
 
-                    localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                    localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + xmlName + ".xml";
 
                     System.IO.File.WriteAllText(localFile, fdata);
 
@@ -243,7 +243,7 @@ namespace BonPrixWebService.Controllers
                         {
                             // Save the file in the Failure folder on the server
 
-                            localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                            localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + xmlName + ".xml";
                                 System.IO.File.WriteAllText(localFile, fdata );
 
                             theResponse = new HttpResponseMessage(statusCodeBAD);
@@ -268,7 +268,7 @@ namespace BonPrixWebService.Controllers
 
                             // Save the file in the Success folder on the server
 
-                            localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/success/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                            localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/success/") + DateTime.Now.ToString("yyyyMMddHHmmssffff")  + "_" + xmlName + ".xml";
                             System.IO.File.WriteAllText(localFile, fdata );
                             theResponse = new HttpResponseMessage(statusCodeOK);
 
@@ -285,7 +285,7 @@ namespace BonPrixWebService.Controllers
 
                             // Save the file in the Failure folder on the server
 
-                            localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                            localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + xmlName + ".xml";
                                 System.IO.File.WriteAllText(localFile, fdata);
 
                             infomsgs.Clear();
@@ -333,7 +333,7 @@ namespace BonPrixWebService.Controllers
 
                             theResponse.Content = new StringContent(rsp.ToString());
 
-                            localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/success/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                            localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/success/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + xmlName + ".xml";
 
                             System.IO.File.WriteAllText(localFile, fdata);
 
@@ -347,7 +347,7 @@ namespace BonPrixWebService.Controllers
                     }
                     catch (Exception E)
                     {
-                        localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                        localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/failure/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + xmlName + ".xml";
                         System.IO.File.WriteAllText(localFile, fdata);
                         theResponse = new HttpResponseMessage(statusCodeBAD);
 
@@ -372,7 +372,7 @@ namespace BonPrixWebService.Controllers
              *  No option but to class it as successful and save to success folder
              * 
              */
-            localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/success/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+            localFile = System.Web.HttpContext.Current.Server.MapPath("/xml/success/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + xmlName + ".xml";
             System.Web.HttpContext.Current.Request.SaveAs(localFile, false);
             theResponse = new HttpResponseMessage(statusCodeOK);
 
@@ -458,7 +458,7 @@ namespace BonPrixWebService.Controllers
             {
                 string localsavepath;
 
-                localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp1.xml";
+                localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_resp1.xml";
 
                 System.IO.File.WriteAllText(localsavepath, xdoc.ToString() );
             }
@@ -509,7 +509,7 @@ namespace BonPrixWebService.Controllers
                 {
                     string localsavepath;
 
-                    localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+                    localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_resp2.xml";
 
                     System.IO.File.WriteAllText(localsavepath, rsp.ToString());
                 }
@@ -538,7 +538,7 @@ namespace BonPrixWebService.Controllers
                 {
                     string localsavepath;
 
-                    localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+                    localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_resp2.xml";
 
                     System.IO.File.WriteAllText(localsavepath, rsp.ToString());
                 }
@@ -572,7 +572,7 @@ namespace BonPrixWebService.Controllers
                     {
                         string localsavepath;
 
-                        localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+                        localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_resp2.xml";
 
                         System.IO.File.WriteAllText(localsavepath, rsp.ToString());
                     }
@@ -590,7 +590,7 @@ namespace BonPrixWebService.Controllers
                     {
                         string localsavepath;
 
-                        localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_all.xml";
+                        localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_all.xml";
 
                         System.IO.File.WriteAllText(localsavepath, bodyText);
                     }
@@ -614,7 +614,7 @@ namespace BonPrixWebService.Controllers
                         {
                             string localsavepath;
 
-                            localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+                            localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_resp2.xml";
 
                             System.IO.File.WriteAllText(localsavepath, rsp.ToString());
                         }
@@ -633,8 +633,18 @@ namespace BonPrixWebService.Controllers
             try
             {
                 string localsavepath;
+                string fileTypeName = calledby;
+               if ( bodyText.Contains("<SKU_Publication_Level>"))
+                {
+                    fileTypeName = "Publication";
+                }
 
-                localsavepath = currentContext.Server.MapPath(getPathToSuccess()) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + calledby + ".xml";
+                bodyText = setEncoding(bodyText);
+
+                string headerdata = getHeader(bodyText);
+
+
+                localsavepath = currentContext.Server.MapPath("../xml/" + calledby + "/" + headerdata + "_" + fileTypeName + ".xml");
 
                 System.IO.File.WriteAllText(localsavepath, bodyText);
             }
@@ -646,7 +656,7 @@ namespace BonPrixWebService.Controllers
             {
                 string localsavepath;
 
-                localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+                localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_resp2.xml";
 
                 System.IO.File.WriteAllText(localsavepath, rsp.ToString());
             }
@@ -655,6 +665,74 @@ namespace BonPrixWebService.Controllers
 
             }
             return theResponse;
+        }
+
+        private string setEncoding(string bodyText)
+        {
+            string encodingtouse = "UTF-8";
+            string newtext = "";
+            if (bodyText.Contains("<?"))
+            {
+                int start = bodyText.IndexOf("<?");
+
+                int end = bodyText.IndexOf("?>");
+
+                if (end > start)
+                {
+                    string newheader = bodyText.Substring(start, end - start);
+                    if (newheader.Contains("encoding"))
+                    {
+                        int starte = newheader.IndexOf("encoding");
+                        if (starte > 0)
+                        {
+                            int startq = newheader.IndexOf('\"', starte);
+                            if (startq > 0)
+                            {
+                                int startlq = newheader.IndexOf('\"', startq + 1);
+                                string isovalue = newheader.Substring(startq + 1, startlq - startq - 1);
+                                newtext = bodyText.Replace(isovalue, encodingtouse);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        newtext = newheader + " encoding=\"" + encodingtouse+ "\"?>" + bodyText.Substring(end + 2, bodyText.Length - end - 2);
+                    }
+                }
+            }
+            else
+            {
+                newtext = "<?xml version=\"1.0\" encoding=\"" + encodingtouse + "\"?>" + bodyText;
+            }
+            return newtext;
+        }
+
+        private string getHeader(string bodytext)
+        {
+            string header = "";
+
+            int start = bodytext.IndexOf("<Header_DateTime>");
+            int end = bodytext.IndexOf("</Header_DateTime>");
+            DateTime dt;
+            if (end > start)
+            {
+                header = bodytext.Substring(start + 17, end - start - 17);
+            }
+            else
+            {
+                header = DateTime.Now.ToString("o");
+            }
+            try
+            {
+                dt = Convert.ToDateTime(header);
+                header = dt.ToString("yyyyMMddHHmmssFFFFF");
+            }
+            catch (Exception e)
+            {
+                header = DateTime.Now.ToString("yyyyMMddHHmmssFFFFF");
+            }
+
+            return header;
         }
 
         async public Task<HttpResponseMessage> Post()
@@ -708,7 +786,7 @@ namespace BonPrixWebService.Controllers
                 {
                     string localsavepath;
 
-                    localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+                    localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_resp2.xml";
 
                     System.IO.File.WriteAllText(localsavepath, rsp.ToString());
                 }
@@ -737,7 +815,7 @@ namespace BonPrixWebService.Controllers
                 {
                     string localsavepath;
 
-                    localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+                    localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_resp2.xml";
 
                     System.IO.File.WriteAllText(localsavepath, rsp.ToString());
                 }
@@ -771,7 +849,7 @@ namespace BonPrixWebService.Controllers
                     {
                         string localsavepath;
 
-                        localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+                        localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_resp2.xml";
 
                         System.IO.File.WriteAllText(localsavepath, rsp.ToString());
                     }
@@ -789,7 +867,7 @@ namespace BonPrixWebService.Controllers
                     {
                         string localsavepath;
 
-                        localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_all.xml";
+                        localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_all.xml";
 
                         System.IO.File.WriteAllText(localsavepath, bodyText);
                     }
@@ -813,7 +891,7 @@ namespace BonPrixWebService.Controllers
                         {
                             string localsavepath;
 
-                            localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_resp2.xml";
+                            localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_resp2.xml";
 
                             System.IO.File.WriteAllText(localsavepath, rsp.ToString());
                         }
@@ -855,7 +933,7 @@ namespace BonPrixWebService.Controllers
             {
                 string localsavepath;
 
-                localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmss") + "_all.xml";
+                localsavepath = currentContext.Server.MapPath("../xml/All/") + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_all.xml";
 
                 System.IO.File.WriteAllText(localsavepath, bodyText);
             }
@@ -900,7 +978,7 @@ namespace BonPrixWebService.Controllers
                             {
                                 tagName = tagName.Substring(li_colon + 1);
                                 xmlName = tagName;
-                                localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                                localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + xmlName + ".xml";
                                 try
                                 {
                                     System.IO.File.WriteAllText(localFile, bodyText);
@@ -908,7 +986,7 @@ namespace BonPrixWebService.Controllers
                                 }
                                 catch (Exception e2)
                                 {
-                                    localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_failed.xml";
+                                    localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_failed.xml";
                                     try
                                     {
                                         System.IO.File.WriteAllText(localFile, bodyText);
@@ -928,7 +1006,7 @@ namespace BonPrixWebService.Controllers
                                     xmlName = calledby;
                                 }
 
-                                localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                                localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + xmlName + ".xml";
                                 try
                                 {
                                     System.IO.File.WriteAllText(localFile, bodyText);
@@ -944,7 +1022,7 @@ namespace BonPrixWebService.Controllers
                     }
                     else
                     {
-                         localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                         localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + xmlName + ".xml";
 
                          try
                          {
@@ -952,7 +1030,7 @@ namespace BonPrixWebService.Controllers
                          }
                          catch (Exception E)
                          {
-                            localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_failed.xml";
+                            localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_failed.xml";
                             try
                             {
                                 System.IO.File.WriteAllText(localFile, bodyText);
@@ -1031,7 +1109,7 @@ namespace BonPrixWebService.Controllers
                                 xmlName = calledby;
                             }
 
-                            localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                            localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + xmlName + ".xml";
                             try
                             {
                                 System.IO.File.WriteAllText(localFile, bodyText);
@@ -1040,7 +1118,7 @@ namespace BonPrixWebService.Controllers
                             {
                                 infomsgs.Clear();
                                 errs.Clear();
-                                localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_failure.xml";
+                                localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_failure.xml";
                                 try
                                 {
                                     System.IO.File.WriteAllText(localFile, bodyText);
@@ -1076,7 +1154,7 @@ namespace BonPrixWebService.Controllers
                                 xmlName = calledby;
                             }
 
-                            localFile = currentContext.Server.MapPath(getPathToSuccess()) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                            localFile = currentContext.Server.MapPath(getPathToSuccess()) + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + xmlName + ".xml";
 
                             errs.Clear();
                             infomsgs.Clear();
@@ -1102,7 +1180,7 @@ namespace BonPrixWebService.Controllers
                             {
                                 xmlName = calledby;
                             }
-                            localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                            localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + xmlName + ".xml";
                             errs.Clear();
                             infomsgs.Clear();
                             try
@@ -1152,7 +1230,7 @@ namespace BonPrixWebService.Controllers
                              */
                             infomsgs.Add("XSD Success");
                             bool TaskSuccess = false;
-                            localFile = currentContext.Server.MapPath(getPathToSuccess()) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                            localFile = currentContext.Server.MapPath(getPathToSuccess()) + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + xmlName + ".xml";
                             try
                             {
                                 System.IO.File.WriteAllText(localFile, bodyText);
@@ -1170,7 +1248,7 @@ namespace BonPrixWebService.Controllers
                     }
                     catch (Exception E)
                     {
-                        localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+                        localFile = currentContext.Server.MapPath(getPathToFailure()) + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + xmlName + ".xml";
                         try
                         {
                             currentContext.Request.SaveAs(localFile, false);
@@ -1198,7 +1276,7 @@ namespace BonPrixWebService.Controllers
              *  No option but to class it as successful and save to success folder
              * 
              */
-            localFile = currentContext.Server.MapPath(getPathToSuccess()) + DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + xmlName + ".xml";
+            localFile = currentContext.Server.MapPath(getPathToSuccess()) + DateTime.Now.ToString("yyyyMMddHHmmssffff") + "_" + xmlName + ".xml";
 
             try
             {

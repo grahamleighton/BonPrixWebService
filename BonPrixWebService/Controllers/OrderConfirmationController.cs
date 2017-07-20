@@ -5,11 +5,10 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using BonPrixWebService.Models;
 
 namespace BonPrixWebService.Controllers
 {
-    public class InvoiceController : ApiController
+    public class OrderConfirmationController : ApiController
     {
         // GET api/<controller>
         public Task<HttpResponseMessage> Get()
@@ -24,20 +23,17 @@ namespace BonPrixWebService.Controllers
             OpenXMLController newapi = new OpenXMLController();
 
             return newapi.Get(id);
-
         }
         public Task<HttpResponseMessage> Post([FromBody]string value)
         {
+            //            var currentContext = System.Web.HttpContext.Current;
+            //            int rl = currentContext.Request.ContentLength;
             OpenXMLController newapi = new OpenXMLController();
-            newapi.setCaller("invoice");
+            newapi.setCaller("orderconfirmation");
 
             return newapi.Post2();
 
 
-/*            ResponseModel rm = new ResponseModel();
-
-            return rm;
-*/
         }
 
 

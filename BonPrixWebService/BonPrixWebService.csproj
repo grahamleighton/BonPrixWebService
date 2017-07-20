@@ -172,7 +172,9 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InvoiceController.cs" />
     <Compile Include="Controllers\OpenXMLController.cs" />
+    <Compile Include="Controllers\OrderConfirmationController.cs" />
     <Compile Include="Controllers\ProductDataController.cs" />
+    <Compile Include="Controllers\PublicationController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
